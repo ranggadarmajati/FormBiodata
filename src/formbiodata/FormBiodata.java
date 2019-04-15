@@ -16,7 +16,7 @@ public class FormBiodata {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Biodata A = new Biodata();
+        Menu A = new Menu();
         A.setVisible(true);
     }
     
