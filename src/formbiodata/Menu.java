@@ -45,6 +45,7 @@ public class Menu extends javax.swing.JFrame {
         jTextName = new javax.swing.JTextField();
         jTextNpm = new javax.swing.JTextField();
         jTextField1 = new javax.swing.JTextField();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jPanelDetailMahasiswa = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
@@ -130,6 +131,8 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        jDateChooser1.setDateFormatString("yyyy-d-mm");
+
         javax.swing.GroupLayout jPanelFormMahasiswaLayout = new javax.swing.GroupLayout(jPanelFormMahasiswa);
         jPanelFormMahasiswa.setLayout(jPanelFormMahasiswaLayout);
         jPanelFormMahasiswaLayout.setHorizontalGroup(
@@ -137,30 +140,37 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
                 .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
-                                .addGap(33, 33, 33)
-                                .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
+                                        .addGap(33, 33, 33)
+                                        .addComponent(jLabel2)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
+                                        .addGap(41, 41, 41)
+                                        .addComponent(jLabel3)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextNpm))
+                                    .addComponent(jLabel8)
+                                    .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel9))
+                                    .addComponent(jLabel6)))
                             .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextNpm))
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel5))))
+                                .addContainerGap()
+                                .addComponent(jLabel5)
+                                .addGap(16, 16, 16)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1)))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addGap(215, 215, 215))
         );
         jPanelFormMahasiswaLayout.setVerticalGroup(
             jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,17 +186,19 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(16, 16, 16)
-                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
+                .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(3, 3, 3)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
-                .addGap(0, 72, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
+                .addGap(0, 20, Short.MAX_VALUE))
         );
 
         jPanelDetailMahasiswa.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail Mahasiswa"));
@@ -321,6 +333,7 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JInternalFrame jInternalFrameMahasiswa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
