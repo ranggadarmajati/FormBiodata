@@ -18,6 +18,7 @@ public class FormBiodata {
         // TODO code application logic here
         Menu A = new Menu();
         A.setVisible(true);
+        A.setExtendedState(Menu.MAXIMIZED_BOTH);
     }
     
 }
