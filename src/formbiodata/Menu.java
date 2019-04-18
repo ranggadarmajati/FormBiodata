@@ -7,6 +7,7 @@ package formbiodata;
 
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
+import org.apache.commons.io.FileUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -46,8 +52,10 @@ public final class Menu extends javax.swing.JFrame {
         stat = DB.stm;
         pst = DB.pst;
         tampil_combo_prodi();
-        data_table_mahasiswa();
-        jInternalFrameMahasiswa.setVisible(false);
+        data_table_mahasiswa("get all");
+        jTextId.setVisible(false);
+        jInternalFrameMahasiswa.setVisible(true);
+        jMenuBar1.setVisible(false);
     }
 
     /**
@@ -64,7 +72,7 @@ public final class Menu extends javax.swing.JFrame {
         jPanelDataMahasiswa = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jTextField2 = new javax.swing.JTextField();
+        jTextSearch = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
         jPanelFormMahasiswa = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -93,6 +101,7 @@ public final class Menu extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jTextId = new javax.swing.JTextField();
         jPanelDetailMahasiswa = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -103,15 +112,15 @@ public final class Menu extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
+        jLabelName = new javax.swing.JLabel();
+        jLabelDtlFoto = new javax.swing.JLabel();
+        jLabelNpm = new javax.swing.JLabel();
+        jLabelProdi = new javax.swing.JLabel();
+        jLabelTempatLahir = new javax.swing.JLabel();
+        jLabelTglLahir = new javax.swing.JLabel();
+        jLabelJenisKelamin = new javax.swing.JLabel();
+        jLabelAlamat = new javax.swing.JLabel();
+        jLabelJenjang = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -148,9 +157,19 @@ public final class Menu extends javax.swing.JFrame {
             }
         ));
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         jButton6.setText("Cari");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelDataMahasiswaLayout = new javax.swing.GroupLayout(jPanelDataMahasiswa);
         jPanelDataMahasiswa.setLayout(jPanelDataMahasiswaLayout);
@@ -159,19 +178,20 @@ public final class Menu extends javax.swing.JFrame {
             .addGroup(jPanelDataMahasiswaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1468, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1475, Short.MAX_VALUE)
                     .addGroup(jPanelDataMahasiswaLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)))
                 .addContainerGap())
         );
         jPanelDataMahasiswaLayout.setVerticalGroup(
             jPanelDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDataMahasiswaLayout.createSequentialGroup()
                 .addGroup(jPanelDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
@@ -209,8 +229,6 @@ public final class Menu extends javax.swing.JFrame {
         });
 
         jDateTglLahir.setDateFormatString("yyyy-MM-d");
-
-        jComboBoxProdi.setSelectedIndex(-1);
 
         jRadioButton1.setText("LAKI-LAKI");
         jRadioButton1.addItemListener(new java.awt.event.ItemListener() {
@@ -255,10 +273,33 @@ public final class Menu extends javax.swing.JFrame {
         });
 
         jButton3.setText("Edit");
+        jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Batal");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Hapus");
+        jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jTextId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextIdActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelFormMahasiswaLayout = new javax.swing.GroupLayout(jPanelFormMahasiswa);
         jPanelFormMahasiswa.setLayout(jPanelFormMahasiswaLayout);
@@ -284,18 +325,20 @@ public final class Menu extends javax.swing.JFrame {
                             .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
                         .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel9)))
-                            .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel5))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFormMahasiswaLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel7)))
+                            .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
+                                    .addGap(14, 14, 14)
+                                    .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel9)))
+                                .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel5))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFormMahasiswaLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel7)))
+                            .addComponent(jTextId, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jDateTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -371,9 +414,12 @@ public final class Menu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)))
+                            .addGroup(jPanelFormMahasiswaLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton2)
@@ -402,17 +448,23 @@ public final class Menu extends javax.swing.JFrame {
 
         jLabel19.setText("Foto :");
 
-        jLabel28.setText("jLabel28");
+        jLabelName.setText("-");
 
-        jLabel30.setText("jLabel20");
+        jLabelDtlFoto.setText("-");
 
-        jLabel32.setText("jLabel20");
+        jLabelNpm.setText("-");
 
-        jLabel33.setText("jLabel20");
+        jLabelProdi.setText("-");
 
-        jLabel34.setText("jLabel20");
+        jLabelTempatLahir.setText("-");
 
-        jLabel35.setText("jLabel20");
+        jLabelTglLahir.setText("-");
+
+        jLabelJenisKelamin.setText("-");
+
+        jLabelAlamat.setText("-");
+
+        jLabelJenjang.setText("-");
 
         javax.swing.GroupLayout jPanelDetailMahasiswaLayout = new javax.swing.GroupLayout(jPanelDetailMahasiswa);
         jPanelDetailMahasiswa.setLayout(jPanelDetailMahasiswaLayout);
@@ -420,43 +472,43 @@ public final class Menu extends javax.swing.JFrame {
             jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
-                        .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addGap(67, 67, 67)
-                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
-                                .addComponent(jLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
-                                .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel17)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel18))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
                         .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
-                        .addComponent(jLabel19)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(75, 75, 75))))
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9))
+                    .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
+                            .addComponent(jLabel14)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabelTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
+                            .addGap(7, 7, 7)
+                            .addComponent(jLabel12)
+                            .addGap(60, 60, 60)
+                            .addComponent(jLabelNpm, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
+                            .addComponent(jLabel13)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabelTempatLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanelDetailMahasiswaLayout.createSequentialGroup()
+                            .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel16)
+                                .addComponent(jLabel17)
+                                .addComponent(jLabel15)
+                                .addComponent(jLabel18))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabelAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelProdi, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelJenjang, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel19)
+                .addGap(18, 18, 18)
+                .addComponent(jLabelDtlFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(75, 75, 75))
         );
         jPanelDetailMahasiswaLayout.setVerticalGroup(
             jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -466,38 +518,38 @@ public final class Menu extends javax.swing.JFrame {
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
                             .addComponent(jLabel19)
-                            .addComponent(jLabel20))
+                            .addComponent(jLabelName))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
-                            .addComponent(jLabel29))
+                            .addComponent(jLabelNpm))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel13)
-                            .addComponent(jLabel31))
+                            .addComponent(jLabelTempatLahir))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14)
-                            .addComponent(jLabel32))
+                            .addComponent(jLabelTglLahir))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
-                            .addComponent(jLabel30))
+                            .addComponent(jLabelProdi))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16)
-                            .addComponent(jLabel33))
+                            .addComponent(jLabelJenisKelamin))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel17)
-                            .addComponent(jLabel35)))
+                            .addComponent(jLabelJenjang)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetailMahasiswaLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabelDtlFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelDetailMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -590,40 +642,107 @@ public final class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextNameActionPerformed
 
+    private void saveImage(){
+        File file = new File(jfc.getSelectedFile().getPath()); // file untuk dikopi
+        try {
+            String path = new File(".").getCanonicalPath();
+            System.out.println(path);
+            FileUtils.copyFileToDirectory(file, new File(path+"/src/formbiodata"));
+        } catch (IOException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-       String SelectedProdi = (String) jComboBoxProdi.getSelectedItem();
-       java.util.Date TglLahir = jDateTglLahir.getDate();
-       
-       System.out.println(SelectedProdi+TglLahir);
-       if("===Pilih Prodi===".equals(SelectedProdi)){
-           JOptionPane.showMessageDialog(this, "Prodi harus dipilih!");
-       }else if(TglLahir == null){
-           JOptionPane.showMessageDialog(this, "Tanggal Harus diisi!");
-       }else{
-           try{
-               java.sql.Date sqldate = new java.sql.Date(TglLahir.getTime());
-               System.out.print(sqldate);
-                sql = "INSERT INTO `tmahasiswa` (`nama`, `npm`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `prodi`, `jenjang`) VALUES (?,?,?,?,?,?,?,?)";
-                pst=con.prepareStatement(sql);
-                pst.setString(1, jTextName.getText());
-                pst.setString(2, jTextNpm.getText());
-                pst.setString(3, jTextTempatLahir.getText());
-                pst.setDate(4, sqldate);
-                pst.setString(5, Selected);
-                pst.setString(6, jTextAlamat.getText());
-                pst.setString(7, SelectedProdi);
-                pst.setString(8,(String) jComboBoxJenjang.getSelectedItem());
-                pst.execute();
-                data_table_mahasiswa();
-                JOptionPane.showMessageDialog(this, "Data Berhasil disimpan.");
-           } catch (SQLException err){
-               JOptionPane.showMessageDialog(this, err.getMessage());
-           }
-       }
+        String Method = "simpan";
+        CreateUpdateDelete(Method);
+        setNull();
+        data_table_mahasiswa("get all");
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void data_table_mahasiswa(){
+    private void CreateUpdateDelete(String type){
+       String SelectedProdi = (String) jComboBoxProdi.getSelectedItem();
+       java.util.Date TglLahir = jDateTglLahir.getDate();
+       String Image = jTextNamaFile.getText();
+       System.out.print("Nama: "+jTextName.getText().length());
+        if("simpan".equals(type)){ 
+            if("".equals(jTextName.getText())){
+                JOptionPane.showMessageDialog(this, "Nama Harus diisi!");
+            }else if("".equals(jTextNpm.getText())){
+                JOptionPane.showMessageDialog(this, "NPM Harus diisi!");
+            }else if("".equals(jTextTempatLahir.getText())){
+                JOptionPane.showMessageDialog(this, "Tempat Lahir Harus diisi!");
+            }else if(TglLahir == null){
+                JOptionPane.showMessageDialog(this, "Tanggal Lahir Harus diisi!");
+            }else if("===Pilih Prodi===".equals(SelectedProdi)){
+                JOptionPane.showMessageDialog(this, "Prodi harus dipilih!");
+            }else if(Selected == null){
+                JOptionPane.showMessageDialog(this, "Jenis Kelamin Harus dipilih!");
+            }else if("".equals(jTextAlamat.getText())){
+                JOptionPane.showMessageDialog(this, "Alamat Harus diisi!");
+            }else if("".equals(Image)){
+                JOptionPane.showMessageDialog(this, "Foto Harus diisi!");
+            }else{
+                try{
+                    java.sql.Date sqldate = new java.sql.Date(TglLahir.getTime());
+                    System.out.print(sqldate);
+                    sql = "INSERT INTO `tmahasiswa` (`nama`, `npm`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `prodi`, `jenjang`, `foto`) VALUES (?,?,?,?,?,?,?,?,?)";
+                    pst=con.prepareStatement(sql);
+                    pst.setString(1, jTextName.getText());
+                    pst.setString(2, jTextNpm.getText());
+                    pst.setString(3, jTextTempatLahir.getText());
+                    pst.setDate(4, sqldate);
+                    pst.setString(5, Selected);
+                    pst.setString(6, jTextAlamat.getText());
+                    pst.setString(7, SelectedProdi);
+                    pst.setString(8,(String) jComboBoxJenjang.getSelectedItem());
+                    pst.setString(9, Image);
+                    pst.execute();
+                    saveImage();
+                    JOptionPane.showMessageDialog(this, "Data Berhasil disimpan.");
+                } catch (SQLException err){
+                    JOptionPane.showMessageDialog(this, err.getMessage());
+                }
+            }
+        }else if("hapus".equals(type)){
+            try{
+                sql = "DELETE FROM `tmahasiswa` WHERE npm=?";
+                    pst=con.prepareStatement(sql);
+                    pst.setString(1, jTextNpm.getText());
+                    pst.execute();
+                    JOptionPane.showMessageDialog(this, "Data Berhasil dihapus.");
+            } catch (SQLException err) {
+                JOptionPane.showMessageDialog(this, err.getMessage());
+            }
+        }else if("edit".equals(type)){
+           try{
+               
+               java.sql.Date sqldate = new java.sql.Date(TglLahir.getTime());
+                    System.out.print(sqldate);
+                    sql = "UPDATE `tmahasiswa` SET `nama` = ?, `npm` = ?, `tempat_lahir` = ?, `tanggal_lahir` = ?, `jenis_kelamin` = ?, `alamat` = ?, `prodi` = ?, `jenjang` = ?, `foto` = ? WHERE `tmahasiswa`.`id` = ?;";
+                    pst=con.prepareStatement(sql);
+                    pst.setString(1, jTextName.getText());
+                    pst.setString(2, jTextNpm.getText());
+                    pst.setString(3, jTextTempatLahir.getText());
+                    pst.setDate(4, sqldate);
+                    pst.setString(5, Selected);
+                    pst.setString(6, jTextAlamat.getText());
+                    pst.setString(7, SelectedProdi);
+                    pst.setString(8,(String) jComboBoxJenjang.getSelectedItem());
+                    pst.setString(9, Image);
+                    pst.setString(10, jTextId.getText());
+                    pst.execute();
+                    saveImage();
+                    JOptionPane.showMessageDialog(this, "Data Berhasil diedit.");
+               
+           } catch (SQLException err){
+                    JOptionPane.showMessageDialog(this, err.getMessage());
+           }
+        }
+    }
+    
+    private void data_table_mahasiswa(String type){
         DefaultTableModel tb= new DefaultTableModel();
         tb.addColumn("NAMA");
         tb.addColumn("NPM");
@@ -636,7 +755,12 @@ public final class Menu extends javax.swing.JFrame {
         jTable1.setModel(tb);
         
         try{
-            sql = "SELECT * FROM tmahasiswa";
+            if("search".equals(type)){
+                sql = "SELECT * FROM tmahasiswa WHERE concat(`nama`, `npm`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `prodi`, `prodi`) like '%"+jTextSearch.getText()+"%'";
+            }else{
+                sql = "SELECT * FROM tmahasiswa";
+            }
+            
             pst =con.prepareStatement(sql);
             rs = pst.executeQuery();
             
@@ -649,7 +773,7 @@ public final class Menu extends javax.swing.JFrame {
                     rs.getString("jenis_kelamin"),
                     rs.getString("alamat"),
                     rs.getString("prodi"),
-                    rs.getString("jenjang")
+                    rs.getString("prodi")
                 });
             }
         } catch (SQLException e) {
@@ -704,7 +828,125 @@ public final class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonPilihGambarActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+         int selRow = jTable1.getSelectedRow();
+         Object value = jTable1.getValueAt(selRow, 1);
+         System.out.println(value);
+         getDetailDataMhs((String) value);
+         jButton3.setEnabled(true);
+         jButton5.setEnabled(true);
+         jButton2.setEnabled(false);
+         
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        setNull();
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(false);
+        jButton5.setEnabled(false);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        String Method = "hapus";
+        CreateUpdateDelete(Method);
+        setNull();
+        data_table_mahasiswa("get all");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String Method = "edit";
+        CreateUpdateDelete(Method);
+        setNull();
+        data_table_mahasiswa("get all");
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(false);
+        jButton5.setEnabled(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextIdActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        String Method;
+        if("".equals(jTextSearch.getText())){
+            Method = "get all";
+        }else{
+            Method = "search";
+        }
+        System.out.print(Method);
+        
+        data_table_mahasiswa(Method);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void getDetailDataMhs(String npm){
+        try{
+            sql = "SELECT * FROM `tmahasiswa` where npm=?";
+            pst =con.prepareStatement(sql);
+            pst.setString(1, npm);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                jTextName.setText(rs.getString("nama")); jLabelName.setText(rs.getString("nama"));
+                jTextNpm.setText(rs.getString("npm")); jLabelNpm.setText(rs.getString("npm"));
+                jTextTempatLahir.setText(rs.getString("tempat_lahir")); jLabelTempatLahir.setText(rs.getString("tempat_lahir"));
+                jDateTglLahir.setDate(rs.getDate("tanggal_lahir")); jLabelTglLahir.setText(rs.getString("tanggal_lahir"));
+                jComboBoxProdi.setSelectedItem(rs.getString("prodi")); jLabelProdi.setText(rs.getString("prodi")); 
+                if("LAKI-LAKI".equals(rs.getString("jenis_kelamin"))){
+                    jRadioButton2.setSelected(false);
+                    jRadioButton1.setSelected(true);
+                }else{
+                    jRadioButton2.setSelected(true);
+                    jRadioButton1.setSelected(false);
+                }
+                jLabelJenisKelamin.setText(rs.getString("jenis_kelamin"));
+                jTextAlamat.setText(rs.getString("alamat")); jLabelAlamat.setText(rs.getString("alamat"));
+                jComboBoxJenjang.setSelectedItem(rs.getString("jenjang")); jLabelJenjang.setText(rs.getString("jenjang"));
+                BufferedImage img = null;
+                           try {
+                                 img = ImageIO.read(getClass().getResource(rs.getString("foto")));
+                           } catch (IOException e) {
+                               e.printStackTrace();
+                           }
+                           Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+                ImageIcon image = new ImageIcon(dimg);
+                jLabelFoto.setIcon(image); jLabelDtlFoto.setIcon(image);
+                jTextNamaFile.setText(rs.getString("foto"));
+                jTextId.setText(rs.getString("id"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
     
+    private void setNull(){
+        jTextName.setText(null);
+        jTextNpm.setText(null);
+        jTextTempatLahir.setText(null);
+        jDateTglLahir.setDate(null);
+        jComboBoxProdi.setSelectedIndex(0);
+        jRadioButton2.setSelected(false);
+        jRadioButton1.setSelected(false);
+        jTextAlamat.setText(null);
+        jComboBoxProdi.setSelectedItem(null);
+        jComboBoxJenjang.setSelectedItem(null);
+        jLabelFoto.setIcon(null);
+        jTextNamaFile.setText(null);
+        jTextId.setText(null);
+        jLabelName.setText("-");
+        jLabelNpm.setText("-");
+        jLabelTempatLahir.setText("-");
+        jLabelTglLahir.setText("-");
+        jLabelProdi.setText("-");
+        jLabelJenisKelamin.setText("-");
+        jLabelAlamat.setText("-");
+        jLabelJenjang.setText("-");
+        jLabelDtlFoto.setIcon(null);
+    }
     
     public void tampil_combo_prodi()
     {
@@ -778,23 +1020,23 @@ public final class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelAlamat;
+    private javax.swing.JLabel jLabelDtlFoto;
     private javax.swing.JLabel jLabelFoto;
+    private javax.swing.JLabel jLabelJenisKelamin;
+    private javax.swing.JLabel jLabelJenjang;
+    private javax.swing.JLabel jLabelName;
+    private javax.swing.JLabel jLabelNpm;
+    private javax.swing.JLabel jLabelProdi;
+    private javax.swing.JLabel jLabelTempatLahir;
+    private javax.swing.JLabel jLabelTglLahir;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -809,10 +1051,11 @@ public final class Menu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextAlamat;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextId;
     private javax.swing.JTextField jTextNamaFile;
     private javax.swing.JTextField jTextName;
     private javax.swing.JTextField jTextNpm;
+    private javax.swing.JTextField jTextSearch;
     private javax.swing.JTextField jTextTempatLahir;
     // End of variables declaration//GEN-END:variables
 }
