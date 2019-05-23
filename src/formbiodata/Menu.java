@@ -24,6 +24,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
 
 /**
  *
@@ -74,6 +81,7 @@ public final class Menu extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jTextSearch = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
+        BtnPrint = new javax.swing.JButton();
         jPanelFormMahasiswa = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -171,6 +179,13 @@ public final class Menu extends javax.swing.JFrame {
             }
         });
 
+        BtnPrint.setText("Print");
+        BtnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnPrintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelDataMahasiswaLayout = new javax.swing.GroupLayout(jPanelDataMahasiswa);
         jPanelDataMahasiswa.setLayout(jPanelDataMahasiswaLayout);
         jPanelDataMahasiswaLayout.setHorizontalGroup(
@@ -180,7 +195,8 @@ public final class Menu extends javax.swing.JFrame {
                 .addGroup(jPanelDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1475, Short.MAX_VALUE)
                     .addGroup(jPanelDataMahasiswaLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(BtnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTextSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,7 +208,8 @@ public final class Menu extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDataMahasiswaLayout.createSequentialGroup()
                 .addGroup(jPanelDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
+                    .addComponent(jButton6)
+                    .addComponent(BtnPrint))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addContainerGap())
@@ -419,7 +436,7 @@ public final class Menu extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jTextId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanelFormMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton2)
@@ -884,6 +901,22 @@ public final class Menu extends javax.swing.JFrame {
         data_table_mahasiswa(Method);
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrintActionPerformed
+        // TODO add your handling code here:
+        try {
+   
+    String namafile= "src/formbiodata/mahasiswa.jasper"; 
+    File report = new File(namafile);
+    JasperReport jreprt = (JasperReport)JRLoader.loadObject(report.getPath());
+    JasperPrint jprintt = JasperFillManager.fillReport(jreprt,null,con);
+    JasperViewer.viewReport(jprintt,false);
+   
+  } catch (JRException e) {
+  JOptionPane.showMessageDialog(null, "Gagal Membuka Laporan","Cetak Laporan",JOptionPane.ERROR_MESSAGE);
+  }
+        
+    }//GEN-LAST:event_BtnPrintActionPerformed
+
     private void getDetailDataMhs(String npm){
         try{
             sql = "SELECT * FROM `tmahasiswa` where npm=?";
@@ -998,6 +1031,7 @@ public final class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnPrint;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
